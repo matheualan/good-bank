@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, VersionColumn } from "typeorm";
 
 export enum AccountStatus {
     ACTIVE = 'ACTIVE',
@@ -19,6 +19,9 @@ export class Account {
 
     @Column({ type: 'enum', enum: AccountStatus })
     status: AccountStatus;
+
+    @CreateDateColumn({ type: 'datetime' })
+    createdAt: Date;
 
     // @VersionColumn = controle de concorrência otimista (pleno total).
     // @VersionColumn()
