@@ -26,8 +26,16 @@ export class PersonService implements PersonRepository {
         return findPerson;
     }
 
-    findByName(name: string): Promise<Person | null> {
-        throw new Error("Method not implemented.");
+    async findByName(name: string): Promise<Person | null> {
+        const findPerson = await this.personRepository.findOne({
+            where: {
+                name
+            }
+        });
+
+        if (!findPerson) throw new HttpException('Pessoa nao encontrada', HttpStatus.NOT_FOUND);
+
+        return findPerson;
     }
 
     create(person: Person): Promise<Person> {
