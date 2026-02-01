@@ -2,7 +2,8 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PersonRepository } from "../repository/person.repository";
 import { Person } from "../model/person.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { ILike, Repository } from "typeorm";
+import { DeleteResult } from "typeorm/browser";
 
 @Injectable()
 export class PersonService implements PersonRepository {
@@ -17,37 +18,37 @@ export class PersonService implements PersonRepository {
     }
 
     async findById(id: number): Promise<Person | null> {
-        const findPerson = await this.personRepository.findOne({
+        const person = await this.personRepository.findOne({
             where: { id: id }
         });
 
-        if (!findPerson) throw new HttpException('Pessoa não encontrada!', HttpStatus.NOT_FOUND);
+        if (!person) {
+            throw new HttpException('Nada foi achado, confira a busca e tente novamente.', HttpStatus.NOT_FOUND);
+        }
 
-        return findPerson;
+        return person;
     }
 
-    async findByName(name: string): Promise<Person | null> {
-        const findPerson = await this.personRepository.findOne({
+    async findByName(name: string): Promise<Person[]> {
+        return await this.personRepository.find({
             where: {
-                name
+                name: ILike(`%${name}%`) 
             }
         });
-
-        if (!findPerson) throw new HttpException('Pessoa nao encontrada', HttpStatus.NOT_FOUND);
-
-        return findPerson;
     }
 
-    create(person: Person): Promise<Person> {
-        throw new Error("Method not implemented.");
+    async create(person: Person): Promise<Person> {
+        return await this.personRepository.save(person);
     }
 
-    update(id: number, person: Person): Promise<Person> {
-        throw new Error("Method not implemented.");
+    async update(id: number, person: Person): Promise<Person> {
+        await this.findById(id);
+        return await this.personRepository.save(person);
     }
 
-    delete(id: number): Promise<void> {
-        throw new Error("Method not implemented.");
+    async delete(id: number): Promise<DeleteResult> {
+        await this.findById(id);
+        return this.personRepository.delete(id);
     }
 
 }
