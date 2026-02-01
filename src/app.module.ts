@@ -16,7 +16,9 @@ import { Person } from './person/model/person.entity';
       password: 'root',
       database: 'db_goodbank',
       entities: [Person],
-      synchronize: true
+      synchronize: true,
+      // autoLoadEntities: true,
+      logging: true
     }),
     AccountModule,
     PersonModule
