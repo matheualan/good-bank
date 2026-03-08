@@ -33,6 +33,7 @@ export class PersonController {
         return this.personService.create(person);
     }
 
+    //Verificar esse metodo que nao esta atualizando
     @Put('/updateById/:id')
     @HttpCode(HttpStatus.OK)
     update(@Param('id', ParseIntPipe) id: number, @Body() person: Person): Promise<Person> {
