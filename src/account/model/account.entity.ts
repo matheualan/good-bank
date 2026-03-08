@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Person } from "../../person/model/person.entity";
 
 export enum AccountStatus {
     ACTIVE = 'ACTIVE',
@@ -7,7 +8,7 @@ export enum AccountStatus {
 }
 
 @Entity({ name: 'tb_accounts' })
-export class Account { 
+export class Account {
 
     @ApiProperty()
     @PrimaryGeneratedColumn()
@@ -16,6 +17,9 @@ export class Account {
     @ApiProperty()
     @Column({ unique: true, nullable: false })
     accountNumber: number;
+
+    @Column({ nullable: false })
+    agencyNumber: number;
 
     @ApiProperty()
     @Column({ type: 'decimal', precision: 12, scale: 2 })
@@ -29,8 +33,7 @@ export class Account {
     @CreateDateColumn({ type: 'datetime' })
     createdAt: Date;
 
-    // @VersionColumn = controle de concorrência otimista (pleno total).
-    // @VersionColumn()
-    // version: number;
+    @ManyToOne(() => Person, person => person.accounts)
+    person: Person;
 
 }

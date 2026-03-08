@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountModule } from './account/account.module';
 import { PersonModule } from './person/person.module';
 import { Person } from './person/model/person.entity';
+import { Account } from './account/model/account.entity';
 
 @Module({
   imports: [
@@ -15,10 +16,10 @@ import { Person } from './person/model/person.entity';
       username: 'root',
       password: 'root',
       database: 'db_goodbank',
-      entities: [Person],
+      entities: [Person, Account],
       synchronize: true,
       // autoLoadEntities: true,
-      logging: true
+      // logging: true
     }),
     AccountModule,
     PersonModule
